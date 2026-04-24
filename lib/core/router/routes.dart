@@ -1,3 +1,4 @@
+import 'package:event_checkin/features/sessions/presentation/sessions_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +17,7 @@ final GoRouter _router = GoRouter(
         child: const LoginScreen(),
       ),
     ),
+    GoRoute(path: sessionsRoute, builder: (context, state) => SessionsScreen()),
   ],
 );
 

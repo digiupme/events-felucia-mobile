@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
+                        cursorColor: Colors.black,
                         decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(color: Colors.black),
@@ -88,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: _obscurePassword,
                         textInputAction: TextInputAction.done,
                         onSubmitted: (_) => _submit(context),
+                        cursorColor: Colors.black,
                         decoration: InputDecoration(
                           labelText: 'Palavra-passe',
                           labelStyle: TextStyle(color: Colors.black),

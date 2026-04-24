@@ -11,7 +11,7 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       title: 'Event Check-in',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(textTheme: GoogleFonts.nunitoTextTheme()),
+      theme: ThemeData(textTheme: GoogleFonts.lexendTextTheme()),
       routerConfig: createRouter(),
     );
   }
