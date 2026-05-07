@@ -7,7 +7,9 @@ import 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _repository;
 
-  LoginCubit(this._repository) : super(LoginInitial());
+  LoginCubit([AuthRepository? repository])
+      : _repository = repository ?? AuthRepository(),
+        super(LoginInitial());
 
   Future<void> login(String email, String password) async {
     if (!EmailValidator.validate(email)) {
@@ -26,5 +28,10 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }
+  }
+
+  Future<void> logout() async {
+    await _repository.logout();
+    emit(LoginInitial());
   }
 }
