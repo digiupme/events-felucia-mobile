@@ -1,4 +1,7 @@
 const String initialRoute = '/';
 const String loginRoute = '/login';
-const String qrCodeRoute = '/qrCode';
 const String sessionsRoute = '/sessions';
+const String checkinScannerRoute = '/scanner';
+const String checkinSuccessRoute = '/checkin-success';
+const String checkinAlreadyCheckedInRoute = '/checkin-already-checked-in';
+const String checkinFailureRoute = '/checkin-failure';

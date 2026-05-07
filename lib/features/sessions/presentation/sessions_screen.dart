@@ -1,5 +1,7 @@
+import 'package:event_checkin/core/router/paths.dart';
 import 'package:event_checkin/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SessionsScreen extends StatelessWidget {
   const SessionsScreen({super.key});
@@ -88,6 +90,13 @@ class SessionsScreen extends StatelessWidget {
                           ),
                         ),
                         onTap: () {
+                          context.push(
+                            checkinScannerRoute,
+                            extra: {
+                            'title': 'Sessão ${index + 1}',
+                            'sessionId': 'placeholder_${index + 1}',
+                          },
+                          );
                           print('Selecionou a sessão ${index + 1}');
                         },
                       ),
