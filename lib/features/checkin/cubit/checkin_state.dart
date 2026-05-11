@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../data/session_detail.dart';
+
 abstract class CheckinState extends Equatable {
   const CheckinState();
 
@@ -7,7 +9,25 @@ abstract class CheckinState extends Equatable {
   List<Object?> get props => [];
 }
 
-class CheckinInitial extends CheckinState {}
+class CheckinSessionLoading extends CheckinState {}
+
+class CheckinSessionFailure extends CheckinState {
+  final String message;
+
+  const CheckinSessionFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class CheckinReady extends CheckinState {
+  final SessionDetail session;
+
+  const CheckinReady(this.session);
+
+  @override
+  List<Object?> get props => [session];
+}
 
 class CheckinLoading extends CheckinState {}
 

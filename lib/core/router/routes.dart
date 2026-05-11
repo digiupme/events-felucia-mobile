@@ -4,6 +4,8 @@ import 'package:event_checkin/features/checkin/presentation/pages/checkin_alread
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_failure.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_scanner.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_success.dart';
+import 'package:event_checkin/features/checkin/cubit/manual_checkin_cubit.dart';
+import 'package:event_checkin/features/checkin/presentation/pages/manual_checkin_screen.dart';
 import 'package:event_checkin/features/sessions/cubit/sessions_cubit.dart';
 import 'package:event_checkin/features/sessions/data/sessions_repository.dart';
 import 'package:event_checkin/features/sessions/presentation/sessions_screen.dart';
@@ -16,10 +18,7 @@ import 'paths.dart';
 final GoRouter _router = GoRouter(
   initialLocation: loginRoute,
   routes: [
-    GoRoute(
-      path: loginRoute,
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: loginRoute, builder: (context, state) => const LoginScreen()),
     GoRoute(
       path: sessionsRoute,
       builder: (context, state) => BlocProvider(
@@ -32,8 +31,10 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         final params = state.extra! as Map;
         return BlocProvider(
-          create: (_) => CheckinCubit(CheckinRepository()),
-          child: CheckinScanner(params: params),
+          create: (_) =>
+              CheckinCubit(CheckinRepository())
+                ..loadSession(params['sessionId'] as String),
+          child: CheckinScanner(sessionId: params['sessionId'] as String),
         );
       },
     ),
@@ -41,14 +42,18 @@ final GoRouter _router = GoRouter(
       path: checkinSuccessRoute,
       builder: (context, state) {
         final params = state.extra! as Map;
-        return CheckinSuccessScreen(attendeeName: params['attendeeName'] as String);
+        return CheckinSuccessScreen(
+          attendeeName: params['attendeeName'] as String,
+        );
       },
     ),
     GoRoute(
       path: checkinAlreadyCheckedInRoute,
       builder: (context, state) {
         final params = state.extra! as Map;
-        return CheckinAlreadyCheckedInScreen(attendeeName: params['attendeeName'] as String);
+        return CheckinAlreadyCheckedInScreen(
+          attendeeName: params['attendeeName'] as String,
+        );
       },
     ),
     GoRoute(
@@ -56,6 +61,19 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         final params = state.extra! as Map;
         return CheckinFailureScreen(message: params['message'] as String);
+      },
+    ),
+    GoRoute(
+      path: manualCheckinRoute,
+      builder: (context, state) {
+        final params = state.extra! as Map<String, String>;
+        return BlocProvider(
+          create: (_) => ManualCheckinCubit(
+            CheckinRepository(),
+            sessionId: params['sessionId']!,
+          )..loadAttendees(),
+          child: ManualCheckinScreen(sessionName: params['sessionName']!),
+        );
       },
     ),
   ],
