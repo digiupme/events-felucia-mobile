@@ -35,7 +35,7 @@ class SessionsScreen extends StatelessWidget {
           ),
           body: BlocBuilder<SessionsCubit, SessionsState>(
             builder: (context, state) {
-              if (state is SessionsLoading) {
+              if (state is SessionsLoading || state is SessionsInitial) {
                 return const Center(
                   child: CircularProgressIndicator(color: Colors.black),
                 );
@@ -181,7 +181,7 @@ class _SessionCard extends StatelessWidget {
         onTap: () {
           context.push(
             checkinScannerRoute,
-            extra: {'title': session.name, 'sessionId': session.id},
+            extra: {'sessionId': session.id},
           );
         },
       ),

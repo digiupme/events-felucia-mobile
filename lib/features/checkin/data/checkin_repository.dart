@@ -88,10 +88,11 @@ class CheckinRepository {
       final json = jsonDecode(response.body) as Map<String, dynamic>;
 
       if (response.statusCode == 200) {
-        final checkedInAt = DateTime.parse(json['checked_in_at'] as String).toLocal();
         if (json['result'] == 'granted') {
+          final checkedInAt = DateTime.parse(json['checked_in_at'] as String).toLocal();
           return CheckinResult(attendeeName: json['attendee_name'], checkedInAt: checkedInAt);
         } else if (json['deny_reason'] == 'already_checked') {
+          final checkedInAt = DateTime.parse(json['checked_in_at'] as String).toLocal();
           throw AlreadyCheckedInException(json['attendee_name'], checkedInAt);
         } else if (json['deny_reason'] == 'wrong_session') {
           throw WrongSessionException();

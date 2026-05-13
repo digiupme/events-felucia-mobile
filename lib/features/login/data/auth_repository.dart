@@ -26,8 +26,12 @@ class AuthRepository {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         ApiClient.instance.setToken(data['token'] as String);
       } else {
-        final body = jsonDecode(response.body) as Map<String, dynamic>;
-        throw Exception(body['message'] ?? Strings.login.authError);
+        String? serverMessage;
+        try {
+          final body = jsonDecode(response.body) as Map<String, dynamic>;
+          serverMessage = body['message'] as String?;
+        } catch (_) {}
+        throw Exception(serverMessage ?? Strings.login.authError);
       }
     } on SocketException {
       throw Exception(Strings.noInternet);
@@ -37,10 +41,12 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
-    await http.post(
-      Uri.parse('${AppConfig.baseUrl}/auth/logout'),
-      headers: ApiClient.instance.headers,
-    );
+    try {
+      await http.post(
+        Uri.parse('${AppConfig.baseUrl}/auth/logout'),
+        headers: ApiClient.instance.headers,
+      );
+    } catch (_) {}
     ApiClient.instance.clearToken();
   }
 }
