@@ -4,10 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../utils/colors.dart';
+import '../../../../utils/strings.dart';
+
+String _formatDateTime(DateTime dt) {
+  final date =
+      '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
+  final time =
+      '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  return '$date às $time';
+}
 
 class CheckinAlreadyCheckedInScreen extends StatelessWidget {
-  const CheckinAlreadyCheckedInScreen({super.key, required this.attendeeName});
+  const CheckinAlreadyCheckedInScreen({
+    super.key,
+    required this.attendeeName,
+    required this.checkedInAt,
+  });
   final String attendeeName;
+  final DateTime checkedInAt;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +64,7 @@ class CheckinAlreadyCheckedInScreen extends StatelessWidget {
                     height: 120,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.warning_outlined,
@@ -63,8 +77,8 @@ class CheckinAlreadyCheckedInScreen extends StatelessWidget {
               SizedBox(height: 50),
               Column(
                 children: [
-                  const Text(
-                    'CHECK-IN JÁ REALIZADO',
+                  Text(
+                    Strings.checkinPages.alreadyTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -75,7 +89,7 @@ class CheckinAlreadyCheckedInScreen extends StatelessWidget {
 
                   const SizedBox(height: 30),
                   Text(
-                    'Este código de acesso já foi processado anteriormente em nossa base de dados.',
+                    Strings.checkinPages.alreadyDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18),
                   ),
@@ -83,7 +97,7 @@ class CheckinAlreadyCheckedInScreen extends StatelessWidget {
               ),
               SizedBox(height: 70),
               Text(
-                'Check-in feito em: 28/05/2026 às 10:00',
+                Strings.checkinPages.checkedInAt(_formatDateTime(checkedInAt)),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
@@ -105,7 +119,7 @@ class CheckinAlreadyCheckedInScreen extends StatelessWidget {
                       Icon(Icons.qr_code_scanner, size: 26),
                       SizedBox(width: 8),
                       const Text(
-                        'Tentar novamente',
+                        Strings.retry,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

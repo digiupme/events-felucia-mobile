@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utils/strings.dart';
+
 import '../data/attendee.dart';
 import '../data/checkin_repository.dart';
 import 'manual_checkin_state.dart';
@@ -15,9 +17,14 @@ class ManualCheckinCubit extends Cubit<ManualCheckinState> {
     emit(ManualCheckinLoading());
     try {
       final attendees = await _repository.fetchAttendees(sessionId);
+      attendees.sort(
+        (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      );
       emit(ManualCheckinLoaded(attendees: attendees));
     } catch (e) {
-      emit(ManualCheckinFailure(e.toString()));
+      emit(
+        ManualCheckinFailure(Strings.manual.loadError),
+      );
     }
   }
 
@@ -40,16 +47,6 @@ class ManualCheckinCubit extends Cubit<ManualCheckinState> {
       ),
     );
 
-    // // TODO: remove before release
-    // emit(
-    //   // ManualCheckinFailure(
-    //   //   attendeeName: attendee.name,
-    //   //   checkedInAt: DateTime.now(),
-    //   // ),
-    //   ManualCheckinSubmitFailure('Check-in manual desabilitado para testes.'),
-    // );
-    // return;
-
     try {
       final result = await _repository.checkInById(attendee.id, sessionId);
       if (result.isGranted) {
@@ -67,10 +64,12 @@ class ManualCheckinCubit extends Cubit<ManualCheckinState> {
           ),
         );
       } else {
-        emit(ManualCheckinSubmitFailure('Erro ao realizar check-in.'));
+        emit(ManualCheckinSubmitFailure(Strings.manual.submitError));
       }
     } catch (e) {
-      emit(ManualCheckinSubmitFailure(e.toString()));
+      emit(
+        ManualCheckinSubmitFailure(Strings.genericError),
+      );
     }
   }
 }

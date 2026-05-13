@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/router/paths.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/strings.dart';
 import '../cubit/login_cubit.dart';
 import '../cubit/login_state.dart';
 
@@ -42,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             }
             if (state is LoginSuccess) {
-              print('Login successful!');
               context.go(sessionsRoute);
             }
           },
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         textInputAction: TextInputAction.next,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: Strings.login.email,
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onSubmitted: (_) => _submit(context),
                         cursorColor: Colors.black,
                         decoration: InputDecoration(
-                          labelText: 'Palavra-passe',
+                          labelText: Strings.login.password,
                           labelStyle: TextStyle(color: Colors.black),
                           enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
@@ -135,8 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  'Iniciar sessão',
+                              : Text(
+                                  Strings.login.submit,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,

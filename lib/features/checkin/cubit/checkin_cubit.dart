@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utils/strings.dart';
+
 import '../data/checkin_repository.dart';
 import '../data/session_detail.dart';
 import 'checkin_state.dart';
@@ -25,33 +27,18 @@ class CheckinCubit extends Cubit<CheckinState> {
 
   Future<void> checkInByQr(String qrCode, String sessionId) async {
     if (qrCode.trim().isEmpty) {
-      emit(const CheckinFailure('Código inválido.'));
+      emit(CheckinFailure(Strings.scanner.invalidCode));
       return;
     }
 
     emit(CheckinLoading());
     try {
       final result = await _repository.checkInByQr(qrCode.trim(), sessionId);
-      emit(CheckinSuccess(attendeeName: result.attendeeName));
+      emit(CheckinSuccess(attendeeName: result.attendeeName, checkedInAt: result.checkedInAt));
     } on AlreadyCheckedInException catch (e) {
-      emit(CheckinAlreadyCheckedIn(attendeeName: e.attendeeName));
-    } catch (e) {
-      emit(CheckinFailure(e.toString()));
-    }
-  }
-
-  Future<void> checkInById(String attendeeId, String sessionId) async {
-    if (attendeeId.trim().isEmpty) {
-      emit(const CheckinFailure('Participante inválido.'));
-      return;
-    }
-
-    emit(CheckinLoading());
-    try {
-      final result = await _repository.checkInById(attendeeId.trim(), sessionId);
-      emit(CheckinSuccess(attendeeName: result.attendeeName));
-    } on AlreadyCheckedInException catch (e) {
-      emit(CheckinAlreadyCheckedIn(attendeeName: e.attendeeName));
+      emit(CheckinAlreadyCheckedIn(attendeeName: e.attendeeName, checkedInAt: e.checkedInAt));
+    } on WrongSessionException {
+      emit(CheckinWrongSession());
     } catch (e) {
       emit(CheckinFailure(e.toString()));
     }

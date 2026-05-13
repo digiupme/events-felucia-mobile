@@ -6,9 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/strings.dart';
 
-class CheckinFailureScreen extends StatelessWidget {
-  const CheckinFailureScreen({super.key, required this.message});
-  final String message;
+class CheckinWrongSessionScreen extends StatelessWidget {
+  const CheckinWrongSessionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class CheckinFailureScreen extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [blueBackgroundColor, Colors.white],
+            colors: [redBackgroundColor, Colors.white],
           ),
         ),
         child: Padding(
@@ -37,7 +36,7 @@ class CheckinFailureScreen extends StatelessWidget {
                     height: 200,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF90CAF9),
+                      color: Color(0xff790000).withAlpha(78),
                     ),
                   ),
                   Positioned.fill(
@@ -53,11 +52,7 @@ class CheckinFailureScreen extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
-                      Icons.error_outline,
-                      size: 80,
-                      color: blueColor,
-                    ),
+                    child: const Icon(Icons.close, size: 75, color: redColor),
                   ),
                 ],
               ),
@@ -65,7 +60,7 @@ class CheckinFailureScreen extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    Strings.checkinPages.failureTitle,
+                    Strings.checkinPages.wrongSessionTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -73,17 +68,15 @@ class CheckinFailureScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-
                   const SizedBox(height: 30),
-                  const Text(
-                    Strings.genericError,
+                  Text(
+                    Strings.checkinPages.wrongSessionDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
               SizedBox(height: 170),
-
               SizedBox(
                 width: 300,
                 child: FilledButton(

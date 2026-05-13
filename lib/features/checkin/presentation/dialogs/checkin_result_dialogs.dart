@@ -1,4 +1,5 @@
 import 'package:event_checkin/utils/colors.dart';
+import 'package:event_checkin/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,9 +27,8 @@ class CheckinSuccessDialog extends StatelessWidget {
     return _CheckinResultDialog(
       backgroundColor: greenBackgroundColor,
       icon: Icons.check,
-      title: 'Check In Realizado',
-      description:
-          'Check in manual realizado com sucesso em ${_formatDateTime(checkedInAt)}.',
+      title: Strings.dialogs.successTitle,
+      description: Strings.dialogs.successDescription(_formatDateTime(checkedInAt)),
       iconColor: greenColor,
     );
   }
@@ -49,8 +49,8 @@ class CheckinAlreadyCheckedInDialog extends StatelessWidget {
     return _CheckinResultDialog(
       backgroundColor: orangeBackgroundColor,
       icon: Icons.info_outline,
-      title: 'Já Registado',
-      description: 'Check-in realizado em ${_formatDateTime(checkedInAt)}.',
+      title: Strings.dialogs.alreadyTitle,
+      description: Strings.dialogs.alreadyDescription(_formatDateTime(checkedInAt)),
       iconColor: orangeColor,
     );
   }
@@ -66,8 +66,8 @@ class CheckinFailureDialog extends StatelessWidget {
     return _CheckinResultDialog(
       backgroundColor: redBackgroundColor,
       icon: Icons.error_outline,
-      title: 'Falha no Check In',
-      description: message ?? 'Houve uma falha. Tente novamente mais tarde.',
+      title: Strings.dialogs.failureTitle,
+      description: message ?? Strings.dialogs.failureFallback,
       iconColor: redColor,
     );
   }
@@ -131,8 +131,8 @@ class _CheckinResultDialog extends StatelessWidget {
                       color: Colors.black,
                       size: 24,
                     ),
-                    label: const Text(
-                      'Scanner',
+                    label: Text(
+                      Strings.dialogs.scannerButton,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -152,8 +152,8 @@ class _CheckinResultDialog extends StatelessWidget {
                       color: Colors.black,
                       size: 24,
                     ),
-                    label: const Text(
-                      'Lista',
+                    label: Text(
+                      Strings.dialogs.listButton,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

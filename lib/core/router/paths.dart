@@ -5,4 +5,5 @@ const String checkinScannerRoute = '/scanner';
 const String checkinSuccessRoute = '/checkin-success';
 const String checkinAlreadyCheckedInRoute = '/checkin-already-checked-in';
 const String checkinFailureRoute = '/checkin-failure';
+const String checkinWrongSessionRoute = '/checkin-wrong-session';
 const String manualCheckinRoute = '/manual-checkin';

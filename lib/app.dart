@@ -15,7 +15,14 @@ class App extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Event Check-in',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: GoogleFonts.lexendTextTheme()),
+        theme: ThemeData(
+          textTheme: GoogleFonts.lexendTextTheme(),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.black,
+            primary: Colors.black,
+          ),
+          useMaterial3: true,
+        ),
         routerConfig: createRouter(),
       ),
     );

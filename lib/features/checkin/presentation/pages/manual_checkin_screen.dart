@@ -1,7 +1,7 @@
 import 'package:event_checkin/utils/colors.dart';
+import 'package:event_checkin/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../cubit/manual_checkin_cubit.dart';
 import '../../cubit/manual_checkin_state.dart';
@@ -51,15 +51,20 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
           context: context,
           barrierDismissible: false,
           builder: (_) => dialog!,
-        ).then((_) => cubit.loadAttendees());
+        ).then((_) {
+          _searchController.clear();
+          cubit.loadAttendees();
+        });
       },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text('Check-in Manual'),
+            title: Text(Strings.manual.title),
             centerTitle: false,
             backgroundColor: Colors.white,
+            elevation: 0,
+            scrolledUnderElevation: 0,
           ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -92,12 +97,13 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
                       ),
                     ),
                     controller: _searchController,
-                    hintText: 'Pesquisar',
+                    hintText: Strings.manual.searchHint,
                     onChanged: context.read<ManualCheckinCubit>().search,
                   ),
                 ),
                 const SizedBox(height: 30),
                 Expanded(child: _buildBody(context, state)),
+                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -108,7 +114,9 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
 
   Widget _buildBody(BuildContext context, ManualCheckinState state) {
     if (state is ManualCheckinLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.black),
+      );
     }
 
     if (state is ManualCheckinFailure) {
@@ -120,7 +128,7 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: context.read<ManualCheckinCubit>().loadAttendees,
-              child: const Text('Tentar novamente'),
+              child: Text(Strings.retry),
             ),
           ],
         ),
@@ -143,7 +151,7 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
     final isSubmitting = state is ManualCheckinSubmitting;
 
     if (attendees.isEmpty) {
-      return const Center(child: Text('Nenhum participante encontrado.'));
+      return Center(child: Text(Strings.manual.noAttendees));
     }
 
     final submittingId = state is ManualCheckinSubmitting
@@ -175,8 +183,8 @@ class _ManualCheckinScreenState extends State<ManualCheckinScreen> {
                       : () => context.read<ManualCheckinCubit>().checkIn(
                           attendee,
                         ),
-                  child: const Text(
-                    'check-in',
+                  child: Text(
+                    Strings.manual.checkinButton,
                     style: TextStyle(color: Colors.black),
                   ),
                 )

@@ -4,10 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../utils/colors.dart';
+import '../../../../utils/strings.dart';
+
+String _formatDateTime(DateTime dt) {
+  final date =
+      '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year}';
+  final time =
+      '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  return '$date às $time';
+}
 
 class CheckinSuccessScreen extends StatelessWidget {
-  const CheckinSuccessScreen({super.key, required this.attendeeName});
+  const CheckinSuccessScreen({
+    super.key,
+    required this.attendeeName,
+    required this.checkedInAt,
+  });
   final String attendeeName;
+  final DateTime checkedInAt;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +64,7 @@ class CheckinSuccessScreen extends StatelessWidget {
                     height: 120,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.check_circle_outline_outlined,
@@ -63,8 +77,8 @@ class CheckinSuccessScreen extends StatelessWidget {
               SizedBox(height: 50),
               Column(
                 children: [
-                  const Text(
-                    'CHECK-IN REALIZADO',
+                  Text(
+                    Strings.checkinPages.successTitle,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -75,7 +89,7 @@ class CheckinSuccessScreen extends StatelessWidget {
 
                   const SizedBox(height: 30),
                   Text(
-                    'Código de acesso processado com sucesso!',
+                    Strings.checkinPages.successDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18),
                   ),
@@ -83,7 +97,7 @@ class CheckinSuccessScreen extends StatelessWidget {
               ),
               SizedBox(height: 70),
               Text(
-                'Check-in feito em: 28/05/2026 às 10:00',
+                Strings.checkinPages.checkedInAt(_formatDateTime(checkedInAt)),
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
@@ -104,7 +118,7 @@ class CheckinSuccessScreen extends StatelessWidget {
                       Icon(Icons.qr_code_scanner, size: 26),
                       SizedBox(width: 8),
                       const Text(
-                        'Próximo',
+                        Strings.next,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

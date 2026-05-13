@@ -12,15 +12,17 @@ class ManualCheckinResult {
   });
 
   bool get isGranted => result == 'granted';
-  bool get isAlreadyCheckedIn => result == 'already_checked_in';
+  bool get isAlreadyCheckedIn => denyReason == 'already_checked';
 
   factory ManualCheckinResult.fromJson(Map<String, dynamic> json) =>
       ManualCheckinResult(
         result: json['result'] as String,
         attendeeName: json['attendee_name'] as String,
-        checkedInAt: DateTime.fromMillisecondsSinceEpoch(
-          (json['checked_in_at'] as int) * 1000,
-        ).toLocal(),
+        checkedInAt: json['checked_in_at'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                (json['checked_in_at'] as int) * 1000,
+              ).toLocal()
+            : DateTime.now(),
         denyReason: json['deny_reason'] as String?,
       );
 }

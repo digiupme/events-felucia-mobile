@@ -1,4 +1,5 @@
 import 'package:event_checkin/core/router/paths.dart';
+import 'package:event_checkin/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,10 +41,18 @@ class _CheckinScannerState extends State<CheckinScanner> {
 
         if (state is CheckinSuccess) {
           route = checkinSuccessRoute;
-          extra = {'attendeeName': state.attendeeName};
+          extra = {
+            'attendeeName': state.attendeeName,
+            'checkedInAt': state.checkedInAt,
+          };
         } else if (state is CheckinAlreadyCheckedIn) {
           route = checkinAlreadyCheckedInRoute;
-          extra = {'attendeeName': state.attendeeName};
+          extra = {
+            'attendeeName': state.attendeeName,
+            'checkedInAt': state.checkedInAt,
+          };
+        } else if (state is CheckinWrongSession) {
+          route = checkinWrongSessionRoute;
         } else if (state is CheckinFailure) {
           route = checkinFailureRoute;
           extra = {'message': state.message};
@@ -60,7 +69,7 @@ class _CheckinScannerState extends State<CheckinScanner> {
       builder: (context, state) {
         if (state is CheckinSessionLoading) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+            body: Center(child: CircularProgressIndicator(color: Colors.black)),
           );
         }
 
@@ -72,17 +81,31 @@ class _CheckinScannerState extends State<CheckinScanner> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const Icon(Icons.wifi_off, size: 48, color: Colors.grey),
                     const SizedBox(height: 16),
                     Text(
-                      state.message,
+                      Strings.scanner.loadError,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () => context.read<CheckinCubit>().loadSession(widget.sessionId),
-                      child: const Text('Tentar novamente'),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.black),
+                        padding: WidgetStatePropertyAll(
+                          const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 25,
+                          ),
+                        ),
+                      ),
+                      onPressed: () => context.read<CheckinCubit>().loadSession(
+                        widget.sessionId,
+                      ),
+                      child: const Text(
+                        Strings.retry,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -106,7 +129,10 @@ class _CheckinScannerState extends State<CheckinScanner> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 100,
+                    horizontal: 20,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -130,18 +156,34 @@ class _CheckinScannerState extends State<CheckinScanner> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(Icons.people_alt_outlined, color: Colors.black),
-                                    const SizedBox(width: 15),
-                                    Text(
-                                      session.capacity != null
-                                          ? '${session.attendeeSessionsCount}/${session.capacity}'
-                                          : '${session.attendeeSessionsCount}',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                    const Icon(
+                                      Icons.people_alt_outlined,
+                                      color: Colors.black,
                                     ),
+                                    const SizedBox(width: 15),
+                                    session.capacity != null
+                                        ? Text(
+                                            '${session.attendeeSessionsCount}/${session.capacity}',
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        : Row(
+                                            children: [
+                                              Text(
+                                                '${session.attendeeSessionsCount}/',
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              SizedBox(width: 5),
+                                              Icon(Icons.all_inclusive_rounded),
+                                            ],
+                                          ),
                                   ],
                                 ),
                               ],
@@ -158,8 +200,8 @@ class _CheckinScannerState extends State<CheckinScanner> {
                             children: [
                               Text(
                                 state is CheckinLoading
-                                    ? 'A processar...'
-                                    : 'Posicione o código no centro',
+                                    ? Strings.scanner.processing
+                                    : Strings.scanner.hint,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -188,9 +230,11 @@ class _CheckinScannerState extends State<CheckinScanner> {
                             },
                           );
                           if (!context.mounted) return;
-                          context.read<CheckinCubit>().loadSession(widget.sessionId);
+                          context.read<CheckinCubit>().loadSession(
+                            widget.sessionId,
+                          );
                         },
-                        child: const Text('check-in manual'),
+                        child: Text(Strings.scanner.manualButton),
                       ),
                     ],
                   ),
@@ -241,9 +285,21 @@ class _CheckinScannerState extends State<CheckinScanner> {
               ),
             ),
             Positioned(top: 0, left: 0, child: _corner()),
-            Positioned(top: 0, right: 0, child: RotatedBox(quarterTurns: 1, child: _corner())),
-            Positioned(bottom: 0, left: 0, child: RotatedBox(quarterTurns: 3, child: _corner())),
-            Positioned(bottom: 0, right: 0, child: RotatedBox(quarterTurns: 2, child: _corner())),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: RotatedBox(quarterTurns: 1, child: _corner()),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: RotatedBox(quarterTurns: 3, child: _corner()),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: RotatedBox(quarterTurns: 2, child: _corner()),
+            ),
             Align(
               alignment: Alignment.center,
               child: Container(width: 250, height: 2, color: Colors.black),

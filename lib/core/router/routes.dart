@@ -2,6 +2,7 @@ import 'package:event_checkin/features/checkin/cubit/checkin_cubit.dart';
 import 'package:event_checkin/features/checkin/data/checkin_repository.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_already_checked_in.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_failure.dart';
+import 'package:event_checkin/features/checkin/presentation/pages/checkin_wrong_session.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_scanner.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_success.dart';
 import 'package:event_checkin/features/checkin/cubit/manual_checkin_cubit.dart';
@@ -44,6 +45,7 @@ final GoRouter _router = GoRouter(
         final params = state.extra! as Map;
         return CheckinSuccessScreen(
           attendeeName: params['attendeeName'] as String,
+          checkedInAt: params['checkedInAt'] as DateTime,
         );
       },
     ),
@@ -53,8 +55,13 @@ final GoRouter _router = GoRouter(
         final params = state.extra! as Map;
         return CheckinAlreadyCheckedInScreen(
           attendeeName: params['attendeeName'] as String,
+          checkedInAt: params['checkedInAt'] as DateTime,
         );
       },
+    ),
+    GoRoute(
+      path: checkinWrongSessionRoute,
+      builder: (context, state) => const CheckinWrongSessionScreen(),
     ),
     GoRoute(
       path: checkinFailureRoute,

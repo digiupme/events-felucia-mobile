@@ -1,6 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utils/strings.dart';
+
 import '../data/auth_repository.dart';
 import 'login_state.dart';
 
@@ -13,11 +15,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> login(String email, String password) async {
     if (!EmailValidator.validate(email)) {
-      emit(const LoginFailure('Verifique o endereço de email.'));
+      emit(LoginFailure(Strings.login.invalidEmail));
       return;
     }
     if (password.isEmpty) {
-      emit(const LoginFailure('Verifique a palavra-passe.'));
+      emit(LoginFailure(Strings.login.invalidPassword));
       return;
     }
 
@@ -26,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
       await _repository.login(email, password);
       emit(LoginSuccess());
     } catch (e) {
-      emit(LoginFailure(e.toString()));
+      emit(LoginFailure(e.toString().replaceFirst('Exception: ', '')));
     }
   }
 

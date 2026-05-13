@@ -33,21 +33,25 @@ class CheckinLoading extends CheckinState {}
 
 class CheckinSuccess extends CheckinState {
   final String attendeeName;
+  final DateTime checkedInAt;
 
-  const CheckinSuccess({required this.attendeeName});
+  const CheckinSuccess({required this.attendeeName, required this.checkedInAt});
 
   @override
-  List<Object?> get props => [attendeeName];
+  List<Object?> get props => [attendeeName, checkedInAt];
 }
 
 class CheckinAlreadyCheckedIn extends CheckinState {
   final String attendeeName;
+  final DateTime checkedInAt;
 
-  const CheckinAlreadyCheckedIn({required this.attendeeName});
+  const CheckinAlreadyCheckedIn({required this.attendeeName, required this.checkedInAt});
 
   @override
-  List<Object?> get props => [attendeeName];
+  List<Object?> get props => [attendeeName, checkedInAt];
 }
+
+class CheckinWrongSession extends CheckinState {}
 
 class CheckinFailure extends CheckinState {
   final String message;
