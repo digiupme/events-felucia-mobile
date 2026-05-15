@@ -1,19 +1,24 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../utils/colors.dart';
 import '../../../../utils/strings.dart';
 
 class CheckinWrongSessionScreen extends StatelessWidget {
-  const CheckinWrongSessionScreen({super.key});
+  const CheckinWrongSessionScreen({super.key, required this.onDismiss});
+  final VoidCallback onDismiss;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        leading: BackButton(onPressed: onDismiss),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -80,7 +85,7 @@ class CheckinWrongSessionScreen extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: FilledButton(
-                  onPressed: () => context.pop(),
+                  onPressed: onDismiss,
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,

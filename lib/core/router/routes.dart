@@ -1,10 +1,6 @@
 import 'package:event_checkin/features/checkin/cubit/checkin_cubit.dart';
 import 'package:event_checkin/features/checkin/data/checkin_repository.dart';
-import 'package:event_checkin/features/checkin/presentation/pages/checkin_already_checked_in.dart';
-import 'package:event_checkin/features/checkin/presentation/pages/checkin_failure.dart';
-import 'package:event_checkin/features/checkin/presentation/pages/checkin_wrong_session.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/checkin_scanner.dart';
-import 'package:event_checkin/features/checkin/presentation/pages/checkin_success.dart';
 import 'package:event_checkin/features/checkin/cubit/manual_checkin_cubit.dart';
 import 'package:event_checkin/features/checkin/presentation/pages/manual_checkin_screen.dart';
 import 'package:event_checkin/features/sessions/cubit/sessions_cubit.dart';
@@ -13,11 +9,20 @@ import 'package:event_checkin/features/sessions/presentation/sessions_screen.dar
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../network/api_client.dart';
 import '../../features/login/presentation/login_screen.dart';
 import 'paths.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: loginRoute,
+  refreshListenable: ApiClient.instance.authNotifier,
+  redirect: (context, state) {
+    final isLoggedIn = ApiClient.instance.isAuthenticated;
+    final isOnLoginPage = state.matchedLocation == loginRoute;
+    if (!isLoggedIn && !isOnLoginPage) return loginRoute;
+    if (isLoggedIn && isOnLoginPage) return sessionsRoute;
+    return null;
+  },
   routes: [
     GoRoute(path: loginRoute, builder: (context, state) => const LoginScreen()),
     GoRoute(
@@ -37,37 +42,6 @@ final GoRouter _router = GoRouter(
                 ..loadSession(params['sessionId'] as String),
           child: CheckinScanner(sessionId: params['sessionId'] as String),
         );
-      },
-    ),
-    GoRoute(
-      path: checkinSuccessRoute,
-      builder: (context, state) {
-        final params = state.extra! as Map;
-        return CheckinSuccessScreen(
-          attendeeName: params['attendeeName'] as String,
-          checkedInAt: params['checkedInAt'] as DateTime,
-        );
-      },
-    ),
-    GoRoute(
-      path: checkinAlreadyCheckedInRoute,
-      builder: (context, state) {
-        final params = state.extra! as Map;
-        return CheckinAlreadyCheckedInScreen(
-          attendeeName: params['attendeeName'] as String,
-          checkedInAt: params['checkedInAt'] as DateTime,
-        );
-      },
-    ),
-    GoRoute(
-      path: checkinWrongSessionRoute,
-      builder: (context, state) => const CheckinWrongSessionScreen(),
-    ),
-    GoRoute(
-      path: checkinFailureRoute,
-      builder: (context, state) {
-        final params = state.extra! as Map;
-        return CheckinFailureScreen(message: params['message'] as String);
       },
     ),
     GoRoute(

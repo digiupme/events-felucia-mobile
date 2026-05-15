@@ -7,6 +7,10 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../cubit/checkin_cubit.dart';
 import '../../cubit/checkin_state.dart';
+import 'checkin_already_checked_in.dart';
+import 'checkin_failure.dart';
+import 'checkin_success.dart';
+import 'checkin_wrong_session.dart';
 
 class CheckinScanner extends StatefulWidget {
   const CheckinScanner({super.key, required this.sessionId});
@@ -19,6 +23,15 @@ class CheckinScanner extends StatefulWidget {
 class _CheckinScannerState extends State<CheckinScanner> {
   final controller = MobileScannerController(autoStart: false);
   bool _scanningLocked = false;
+  Widget? _resultWidget;
+
+  void _dismissResult() {
+    context.read<CheckinCubit>().reset();
+    setState(() {
+      _resultWidget = null;
+      _scanningLocked = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -36,37 +49,33 @@ class _CheckinScannerState extends State<CheckinScanner> {
           return;
         }
 
-        String? route;
-        Map<String, dynamic>? extra;
+        Widget? result;
 
         if (state is CheckinSuccess) {
-          route = checkinSuccessRoute;
-          extra = {
-            'attendeeName': state.attendeeName,
-            'checkedInAt': state.checkedInAt,
-          };
+          result = CheckinSuccessScreen(
+            attendeeName: state.attendeeName,
+            checkedInAt: state.checkedInAt,
+            onDismiss: _dismissResult,
+          );
         } else if (state is CheckinAlreadyCheckedIn) {
-          route = checkinAlreadyCheckedInRoute;
-          extra = {
-            'attendeeName': state.attendeeName,
-            'checkedInAt': state.checkedInAt,
-          };
+          result = CheckinAlreadyCheckedInScreen(
+            attendeeName: state.attendeeName,
+            checkedInAt: state.checkedInAt,
+            onDismiss: _dismissResult,
+          );
         } else if (state is CheckinWrongSession) {
-          route = checkinWrongSessionRoute;
+          result = CheckinWrongSessionScreen(onDismiss: _dismissResult);
         } else if (state is CheckinFailure) {
-          route = checkinFailureRoute;
-          extra = {'message': state.message};
+          result = CheckinFailureScreen(
+            message: state.message,
+            onDismiss: _dismissResult,
+          );
         }
 
-        if (route == null) return;
-
-        final cubit = context.read<CheckinCubit>();
-        context.push(route, extra: extra).then((_) {
-          cubit.reset();
-          setState(() => _scanningLocked = false);
-        });
+        if (result != null) setState(() => _resultWidget = result);
       },
       builder: (context, state) {
+        if (_resultWidget != null) return _resultWidget!;
         if (state is CheckinSessionLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator(color: Colors.black)),
