@@ -142,110 +142,119 @@ class _CheckinScannerState extends State<CheckinScanner> {
                     vertical: 100,
                     horizontal: 20,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    session.name,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.people_alt_outlined,
+                                        color: Colors.black,
+                                      ),
+                                      const SizedBox(width: 15),
+                                      session.capacity != null
+                                          ? Text(
+                                              '${session.attendeeSessionsCount}/${session.capacity}',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            )
+                                          : Row(
+                                              children: [
+                                                Text(
+                                                  '${session.attendeeSessionsCount}/',
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5),
+                                                Icon(
+                                                  Icons.all_inclusive_rounded,
+                                                ),
+                                              ],
+                                            ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            _buildScanner(context, state),
+                            const SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  session.name,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
+                                  state is CheckinLoading
+                                      ? Strings.scanner.processing
+                                      : Strings.scanner.hint,
                                   style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.people_alt_outlined,
-                                      color: Colors.black,
-                                    ),
-                                    const SizedBox(width: 15),
-                                    session.capacity != null
-                                        ? Text(
-                                            '${session.attendeeSessionsCount}/${session.capacity}',
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          )
-                                        : Row(
-                                            children: [
-                                              Text(
-                                                '${session.attendeeSessionsCount}/',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              SizedBox(width: 5),
-                                              Icon(Icons.all_inclusive_rounded),
-                                            ],
-                                          ),
-                                  ],
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          _buildScanner(context, state),
-                          const SizedBox(height: 30),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                state is CheckinLoading
-                                    ? Strings.scanner.processing
-                                    : Strings.scanner.hint,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      FilledButton(
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(Colors.black),
-                          padding: WidgetStatePropertyAll(
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                          ),
+                          ],
                         ),
-                        onPressed: () async {
-                          await controller.stop();
-                          if (!context.mounted) return;
-                          await context.push(
-                            manualCheckinRoute,
-                            extra: {
-                              'sessionId': widget.sessionId,
-                              'sessionName': session.name,
-                            },
-                          );
-                          if (!context.mounted) return;
-                          context.read<CheckinCubit>().loadSession(
-                            widget.sessionId,
-                          );
-                        },
-                        child: Text(Strings.scanner.manualButton),
-                      ),
-                    ],
+                        FilledButton(
+                          style: const ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Colors.black,
+                            ),
+                            padding: WidgetStatePropertyAll(
+                              EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 25,
+                              ),
+                            ),
+                          ),
+                          onPressed: () async {
+                            await controller.stop();
+                            if (!context.mounted) return;
+                            await context.push(
+                              manualCheckinRoute,
+                              extra: {
+                                'sessionId': widget.sessionId,
+                                'sessionName': session.name,
+                              },
+                            );
+                            if (!context.mounted) return;
+                            context.read<CheckinCubit>().loadSession(
+                              widget.sessionId,
+                            );
+                          },
+                          child: Text(Strings.scanner.manualButton),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 if (state is CheckinLoading)

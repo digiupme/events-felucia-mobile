@@ -29,86 +29,93 @@ class CheckinWrongSessionScreen extends StatelessWidget {
             colors: [redBackgroundColor, Colors.white],
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 100),
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xff790000).withAlpha(78),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
-                      child: Container(color: Colors.transparent),
-                    ),
-                  ),
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.close, size: 75, color: redColor),
-                  ),
-                ],
-              ),
-              SizedBox(height: 50),
-              Column(
-                children: [
-                  Text(
-                    Strings.checkinPages.wrongSessionTitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  Text(
-                    Strings.checkinPages.wrongSessionDescription,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              ),
-              SizedBox(height: 170),
-              SizedBox(
-                width: 300,
-                child: FilledButton(
-                  onPressed: onDismiss,
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white, width: 1.5),
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.qr_code_scanner, size: 26),
-                      SizedBox(width: 8),
-                      Text(
-                        Strings.retry,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 32,
+              right: 32,
+              top: 70,
+              bottom: 30,
+            ),
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xff790000).withAlpha(78),
                       ),
-                    ],
+                    ),
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
+                        child: Container(color: Colors.transparent),
+                      ),
+                    ),
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.close, size: 75, color: redColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 50),
+                Column(
+                  children: [
+                    Text(
+                      Strings.checkinPages.wrongSessionTitle,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Text(
+                      Strings.checkinPages.wrongSessionDescription,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 150),
+                SizedBox(
+                  width: 300,
+                  child: FilledButton(
+                    onPressed: onDismiss,
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white, width: 1.5),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.qr_code_scanner, size: 26),
+                        SizedBox(width: 8),
+                        Text(
+                          Strings.retry,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
